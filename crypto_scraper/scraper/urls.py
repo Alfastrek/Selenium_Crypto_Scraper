@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views
+from .views import StartScrapingView, ScrapingStatusView
 
 urlpatterns = [
-    path('api/taskmanager/start_scraping', views.start_scraping, name='start_scraping'),
-    path('api/taskmanager/scraping_status/<uuid:job_id>/', views.scraping_status, name='scraping_status'),
+    path('api/taskmanager/start_scraping', StartScrapingView.as_view(), name='start_scraping'),
+    path('api/taskmanager/scraping_status/<uuid:job_id>', ScrapingStatusView.as_view(), name='scraping_status'),
 ]

@@ -1,18 +1,16 @@
 from celery import shared_task
-from .coinmarketcap import CoinMarketCap
 from .models import Task
+from .coinmarketcap import CoinMarketCap 
 
 @shared_task
 def scrape_coin_data(task_id):
     try:
         task = Task.objects.get(id=task_id)
-        cmc = CoinMarketCap()
-        coin_data = cmc.fetch_coin_data(task.coin)
-        cmc.close()
-        task.output = coin_data
+        coin = task.coin
+        scraper = CoinMarketCap()
+        output = scraper.fetch_coin_data(coin)
+        task.output = output
         task.status = 'completed'
         task.save()
-    except Exception as e:
-        task.status = 'failed'
-        task.output = {'error': str(e)}
-        task.save()
+    except Task.DoesNotExist:
+        pass 
